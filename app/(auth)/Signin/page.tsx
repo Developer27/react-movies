@@ -1,5 +1,4 @@
 import { auth, signIn } from "@/app/lib/auth";
-import prisma from "@/app/lib/db";
 import { executeAction } from "@/app/lib/executeAction";
 import GitHubSignin from "@/components/GitHubSignin";
 
@@ -9,9 +8,6 @@ import { redirect } from "next/navigation";
 async function SignIn() {
   const session = await auth();
   if (session) redirect("/");
-
-  const users = await prisma.user.findMany()
-  console.log(users)
 
   return (
     <div className="w-1/3 border rounded-md p-6 flex flex-col">

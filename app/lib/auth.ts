@@ -2,7 +2,7 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import GitHub from "next-auth/providers/github"
 import prisma from "./db"
-import { SignupFormSchema } from "./schema"
+import { SigninFormSchema, SignupFormSchema } from "./schema"
 
 
 
@@ -16,7 +16,7 @@ export const { auth, handlers, signIn } = NextAuth({ providers: [GitHub, Credent
   authorize: async (credentials) => {
   
 
-    const validatedCredentials = SignupFormSchema.parse(credentials);
+    const validatedCredentials = SigninFormSchema.parse(credentials);
 
     const email = validatedCredentials.email as string
     const password = validatedCredentials.password as string

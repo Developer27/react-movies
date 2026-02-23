@@ -11,7 +11,7 @@ export default async function Home() {
   return (
     <div className="flex flex-col gap-3">
       Hello {session.user?.name || session.user?.email}
-      <SignoutBtn />
+      
     </div>
   );
 }

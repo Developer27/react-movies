@@ -1,34 +1,42 @@
-import NextAuth from "next-auth"
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import NextAuth from "next-auth";
+import prisma from "./prisma";
 import Credentials from "next-auth/providers/credentials"
-import GitHub from "next-auth/providers/github"
-import prisma from "./db"
-import { SignupFormSchema } from "./schema"
+import { compare } from "bcryptjs";
 
+export const { handlers, signIn, signOut, auth} = NextAuth({
+  providers: [ 
+    Credentials({
+      name: "Credentials",
+      credentials: {
+        email: {label: "Email", type: "email"},
+        password: {label: "Password", type: "password"}
+      },
+      async authorize(credentials) {
+        if (!credentials.email || !credentials.password) {
+          throw new Error("Email and password are required");
+        }
+        const user = await prisma.user.findUnique({where: {email: credentials.email as string}});
 
+        if(!user || !user.password) {
+          throw new Error("Invalid email or password");
+        }
 
+        const isMatch = await compare(credentials.password as string, user.password as string);
 
-export const { auth, handlers, signIn } = NextAuth({ providers: [GitHub, Credentials({
-  credentials: {
-    email: {},
-    password: {}
-  },
-  
-  authorize: async (credentials) => {
-  
+        if (!isMatch) {
+          throw new Error("Invalid email or password");
+        }
 
-    const validatedCredentials = SignupFormSchema.parse(credentials);
-
-    const email = validatedCredentials.email as string
-    const password = validatedCredentials.password as string
-  
-    const user = await prisma.user.findUnique({ where: { email }, })
-    if(!user) {
-      throw new Error("Invalid credentials.");
-    }
-    return {
-      id: user.id.toString(),
-      email: user.email,
-      userName: user.username
-    };
+        return {
+            id: user.id,
+            email: user.email,
+            username: user.username
+        };
+      }
+  })],
+  adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: "jwt"
   }
-})] }) 
+})

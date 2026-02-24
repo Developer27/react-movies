@@ -24,11 +24,7 @@ export const SigninFormSchema = z.object({
             .regex(/[^a-zA-Z0-9]/, {
               error: 'Contain at least one special character.',
             })
-<<<<<<< HEAD
             .trim() 
-=======
-            .trim()
->>>>>>> 9674d422e4d34f830f636f0a796a6ebb33158e59
 })
 
 export type FormState = | {

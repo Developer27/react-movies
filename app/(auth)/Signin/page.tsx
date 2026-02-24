@@ -1,5 +1,5 @@
 import { auth } from "@/app/lib/auth";
-import SigninForm from "@/app/(auth)/signin/_signinForm/SignInForm";
+import SigninForm from "@/app/(auth)/signin/_signin_components/SignInForm";
 
 import GitHubSignin from "@/components/GitHubSignin";
 

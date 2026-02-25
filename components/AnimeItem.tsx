@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Rating } from "./Rating";
+import MainCharacterModal from "./MainCharacterModal";
+import { AnimeCharacterImages, ImagesType } from "@/app/lib/types/types";
 
 type ThemeType = {
   mal_id: number;
@@ -27,21 +29,10 @@ type StudiosType = {
   name: string;
 };
 
-type ImageFormat = {
-  image_url: string;
-  small_image_url: string;
-  large_image_url: string;
-};
-
-type Images = {
-  jpg: ImageFormat;
-  webp: ImageFormat;
-};
-
 type AnimeItem = {
   mal_id: number;
   url: string;
-  images: Images;
+  images: ImagesType;
   type: string;
   status: string;
   title_english: string;
@@ -55,15 +46,6 @@ type AnimeItem = {
   studios: StudiosType[];
   genres: GenreType[];
   themes: ThemeType[];
-};
-
-type ImageType = {
-  image_url: string;
-};
-
-type AnimeCharacterImages = {
-  jpg: ImageType;
-  webp: Images;
 };
 
 type AnimeCharacter = {
@@ -84,6 +66,10 @@ function AnimeItem() {
   const [animeCharacters, setAnimeCharacters] = useState<
     AnimeCharacterItem[] | null
   >(null);
+  const [selectedCharacterId, setSelectedCharacterId] = useState<number | null>(
+    null,
+  );
+  const [isCharModalOpen, setIsCharModelOpen] = useState<boolean>(false);
 
   async function getData() {
     try {
@@ -218,24 +204,40 @@ function AnimeItem() {
       <div className="w-full pt-10">
         <p>{animeItem.synopsis}</p>
       </div>
-      <div className="flex gap-10">
-        {animeCharacters?.map((item) => {
-          return (
-            <div
-              key={item.character.mal_id}
-              className="flex flex-col items-center"
-            >
-              <Image
-                src={item.character.images.jpg.image_url}
-                alt="character_image"
-                width={150}
-                height={150}
-              />
-              <p>{item.character.name}</p>
-            </div>
-          );
-        })}
+      <div className="flex flex-col gap-2">
+        <h3 className="text-2xl font-semibold text-blue-950">
+          Main characters
+        </h3>
+
+        <div className="flex gap-10">
+          {animeCharacters?.map((item) => {
+            return (
+              <div
+                key={item.character.mal_id}
+                className="flex flex-col items-center"
+                onClick={() => {
+                  setSelectedCharacterId(item.character.mal_id);
+                  setIsCharModelOpen(true);
+                }}
+              >
+                <Image
+                  src={item.character.images.jpg.image_url}
+                  alt="character_image"
+                  width={150}
+                  height={150}
+                />
+                <p>{item.character.name}</p>
+              </div>
+            );
+          })}
+        </div>
       </div>
+      {isCharModalOpen && selectedCharacterId && (
+        <MainCharacterModal
+          id={selectedCharacterId}
+          onClose={() => setIsCharModelOpen(false)}
+        />
+      )}
     </div>
   );
 }

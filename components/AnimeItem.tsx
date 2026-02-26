@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Rating } from "./Rating";
 import MainCharacterModal from "./MainCharacterModal";
 import { AnimeCharacterImages, ImagesType } from "@/app/lib/types/types";
+import { studioLogos } from "@/app/lib/studio_logs";
 
 type ThemeType = {
   mal_id: number;
@@ -27,6 +28,8 @@ type AiredType = {
 type StudiosType = {
   mal_id: number;
   name: string;
+  type: string;
+  url: string;
 };
 
 type AnimeItem = {
@@ -157,19 +160,6 @@ function AnimeItem() {
           <p className="text-sm text-gray-500">Source: {animeItem.source}</p>
 
           <div className="flex gap-2 text-sm text-gray-500">
-            <p>Studios:</p>
-            <div className="flex items-center">
-              {animeItem.studios.map((item, i) => {
-                return (
-                  <p key={item.mal_id} className="text-sm">
-                    {item.name} {i !== animeItem.studios.length - 1 ? "," : ""}
-                  </p>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="flex gap-2 text-sm text-gray-500">
             <p>Genres:</p>
             <div className="flex gap-2 items-center">
               {animeItem.genres.map((item, i) => {
@@ -199,6 +189,33 @@ function AnimeItem() {
             </span>
           </div>
           <Rating score={+animeItem.score} />
+          <div className="flex gap-2 text-sm text-gray-500 justify-center items-center pt-5">
+            <p>Studios:</p>
+            <div className="flex items-center">
+              {animeItem.studios.map((item, i) => {
+                console.log(item.mal_id);
+                return (
+                  <div key={item.mal_id} className="flex gap-2">
+                    <p className="text-sm">
+                      {i !== animeItem.studios.length - 1 ? "," : ""}
+                    </p>
+                    {studioLogos[item.mal_id] ? (
+                      <a href={`${item.url}`} target="_blank">
+                        <Image
+                          src={studioLogos[item.mal_id]}
+                          alt={`${item.name}`}
+                          width={150}
+                          height={150}
+                        />
+                      </a>
+                    ) : (
+                      <p> {item.name} </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
       <div className="w-full pt-10">
@@ -214,7 +231,7 @@ function AnimeItem() {
             return (
               <div
                 key={item.character.mal_id}
-                className="flex flex-col items-center"
+                className="flex flex-col items-center hover:cursor-pointer transition-transform duration-200 ease-out hover:-translate-y-2"
                 onClick={() => {
                   setSelectedCharacterId(item.character.mal_id);
                   setIsCharModelOpen(true);
@@ -226,7 +243,9 @@ function AnimeItem() {
                   width={150}
                   height={150}
                 />
-                <p>{item.character.name}</p>
+                <p className="text-sm w-2/3 text-center">
+                  {item.character.name}
+                </p>
               </div>
             );
           })}

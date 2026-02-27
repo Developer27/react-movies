@@ -4,33 +4,16 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Rating } from "./Rating";
 import MainCharacterModal from "./MainCharacterModal";
-import { AnimeCharacterImages, ImagesType } from "@/app/lib/types/types";
+import {
+  AiredType,
+  AnimeCharacterImages,
+  GenreType,
+  ImagesType,
+  StudiosType,
+  ThemeType,
+} from "@/app/lib/types/types";
 import { studioLogos } from "@/app/lib/studio_logs";
-
-type ThemeType = {
-  mal_id: number;
-  name: string;
-  url: string;
-};
-
-type GenreType = {
-  mal_id: number;
-  type: string;
-  name: string;
-  url: string;
-};
-
-type AiredType = {
-  from: string;
-  to: string;
-};
-
-type StudiosType = {
-  mal_id: number;
-  name: string;
-  type: string;
-  url: string;
-};
+import { useParams } from "next/navigation";
 
 type AnimeItem = {
   mal_id: number;
@@ -74,12 +57,14 @@ function AnimeItem() {
   );
   const [isCharModalOpen, setIsCharModelOpen] = useState<boolean>(false);
 
+  const { id } = useParams();
+
   async function getData() {
     try {
-      const res = await fetch("https://api.jikan.moe/v4/anime");
+      const res = await fetch(`https://api.jikan.moe/v4/anime/${id}`);
       const data = await res.json();
       console.log(data);
-      setAnimeItem(data.data[0]);
+      setAnimeItem(data.data);
     } catch (error) {
       console.log(error);
     }
@@ -218,11 +203,11 @@ function AnimeItem() {
           </div>
         </div>
       </div>
-      <div className="w-full pt-10">
+      <div className="w-full pt-3">
         <p>{animeItem.synopsis}</p>
       </div>
       <div className="flex flex-col gap-2">
-        <h3 className="text-2xl font-semibold text-blue-950">
+        <h3 className="text-2xl font-semibold text-blue-950 pt-2">
           Main characters
         </h3>
 

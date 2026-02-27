@@ -1,22 +1,12 @@
 "use client";
-import { ImagesType } from "@/app/lib/types/types";
+import { AnimeArrType, ImagesType } from "@/app/lib/types/types";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import FeaturedInSlider from "./FeaturedInSlider";
 
 type MainCharacterModalType = {
   id: number;
   onClose: () => void;
-};
-
-type AnimeType = {
-  mal_id: number;
-  title: string;
-  images: ImagesType;
-};
-
-type AnimeArrType = {
-  role: string;
-  anime: AnimeType;
 };
 
 type MangaType = {
@@ -56,7 +46,7 @@ function MainCharacterModal({ id, onClose }: MainCharacterModalType) {
   const [characterData, setCharacterData] = useState<MainCharacterType | null>(
     null,
   );
-  const [showAll, setShowAll] = useState(false);
+  const [showFullBio, setShowFullBio] = useState(false);
 
   async function getCharData() {
     try {
@@ -74,23 +64,21 @@ function MainCharacterModal({ id, onClose }: MainCharacterModalType) {
   }, []);
 
   if (!characterData) {
-    return (
-      <div className="bg-black opacity-50 w-full h-full absoulte top-0 left-0 z-100 flex items-center justify-center">
-        <div className="flex items-center justify-center w-fit">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
-        </div>
-      </div>
-    );
+    return null;
+    // return (
+    //   <div className="bg-black opacity-50 w-full h-full absoulte top-0 left-0 z-100 flex items-center justify-center">
+    //     <div className="flex items-center justify-center w-fit">
+    //       <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
+    //     </div>
+    //   </div>
+    // );
   }
 
   return (
-    <div className="w-full h-full absolute top-0 left-0 flex flex-col justify-center items-center">
-      <div
-        className="bg-black opacity-50 w-full h-full absoulte top-0 left-0"
-        onClick={onClose}
-      ></div>
+    <div className="fixed inset-0 z-50 flex justify-center overflow-y-auto">
+      <div className="absolute inset-0 bg-black/50" onClick={onClose}></div>
 
-      <div className="w-2/3 bg-white rounded-md absolute z-10 px-5 py-7 flex flex-col">
+      <div className="relative z-10 w-2/3 mt-10 mb-10 max-h-[90vh] bg-white rounded-md px-5 py-7 flex flex-col overflow-y-auto no-scrollbar">
         <div
           className="absolute flex items-center justify-center w-[20px] h-[20px] top-3 right-3 hover:cursor-pointer duration-200 ease-in-out hover:rotate-90 active:scale-90 active:opacity-60"
           onClick={onClose}
@@ -125,7 +113,7 @@ function MainCharacterModal({ id, onClose }: MainCharacterModalType) {
             <h2 className="text-2xl text-blue-950 font-semibold">Voices:</h2>
 
             <div
-              className={`flex flex-wrap gap-2 overflow-hidden transition-[max-height] duration-300 ease-in-out w-full ${showAll ? "max-h-[1500px]" : "max-h-[400px]"}`}
+              className={`flex flex-wrap gap-2 overflow-hidden transition-[max-height] duration-300 ease-in-out w-full `}
             >
               <div className="relative w-[220px]">
                 <div
@@ -159,10 +147,34 @@ function MainCharacterModal({ id, onClose }: MainCharacterModalType) {
           </div>
         </div>
 
-        <p className="text-sm py-3">{characterData.about}</p>
+        <div className="relative">
+          <h2 className="text-2xl text-blue-950 font-semibold pt-3">Bio:</h2>
+          <div
+            className={`overflow-hidden transition-all duration-500 ease-in-out  ${
+              showFullBio
+                ? "max-h-[600px] opacity-100"
+                : "max-h-[120px] opacity-80"
+            }`}
+          >
+            <p className="text-sm leading-relaxed text-gray-800 whitespace-pre-line">
+              {characterData.about}
+            </p>
+          </div>
+
+          {!showFullBio && (
+            <div className="pointer-events-none absolute bottom-0 left-0 h-12 w-full bg-gradient-to-t from-white to-transparent" />
+          )}
+        </div>
+        <button
+          className="mt-1 w-fit text-sm font-semibold text-blue-700 hover:underline hover:cursor-pointer"
+          onClick={() => setShowFullBio((prev) => !prev)}
+        >
+          {showFullBio ? "Hide..." : "Show more..."}
+        </button>
         <div className="pt-3">
           <p className="pb-2 text-blue-950 font-semibold">Featured in Anime:</p>
-          <div className="flex gap-2">
+          <FeaturedInSlider data={characterData.anime} />
+          {/* <div className="flex gap-2">
             {characterData.anime.map((item) => {
               return (
                 <div
@@ -179,7 +191,7 @@ function MainCharacterModal({ id, onClose }: MainCharacterModalType) {
                 </div>
               );
             })}
-          </div>
+          </div> */}
           <p className="pb-2 text-blue-950 font-semibold">
             Featured it Manga:{" "}
           </p>

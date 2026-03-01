@@ -16,7 +16,7 @@ function AnimeCard({ data }: AnimeCardProps) {
 
   return (
     <div
-      className="border flex flex-col gap-2 justify-center hover:cursor-pointer w-[150px] max-w-[150px]"
+      className="group-hover border flex flex-col gap-1 justify-center hover:cursor-pointer w-[150px] max-w-[150px] "
       onClick={goToAnimeitem}
     >
       <div className="relative w-[150px] h-[212px]">
@@ -28,8 +28,10 @@ function AnimeCard({ data }: AnimeCardProps) {
         />
       </div>
 
-      <p className="text-sm truncate">{data.title}</p>
-      <div className="flex items-center justify-between w-full">
+      <p className="text-sm truncate font-semibold text-blue-950 animated-underline relative">
+        {data.title}
+      </p>
+      <div className="flex items-center justify-between w-full ">
         <p className="text-sm">
           {data.type === "TV" ? data.type + " show" : data.type}
         </p>

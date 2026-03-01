@@ -156,3 +156,27 @@ body,
   scrollbar-width: none;
   /* Firefox */
 }
+
+.animated-underline::after {
+  content: "";
+  position: absolute;
+  background: #172554;
+  height: 2px;
+  width: 0;
+  left: 0;
+  bottom: 0;
+  transition: width 0.3s ease;
+  border-radius: 10px;
+} 
+
+.group-hover {
+  transition: transform 0.3s ease;
+}
+
+.group-hover:hover .animated-underline::after {
+  width: 100%;
+}
+
+.group-hover:hover {
+  transform: translateY(-10px)
+}

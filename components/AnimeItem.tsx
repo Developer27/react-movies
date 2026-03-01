@@ -47,8 +47,12 @@ type AnimeCharacterItem = {
   role: string;
 };
 
-function AnimeItem() {
-  const [animeItem, setAnimeItem] = useState<AnimeItem | null>(null);
+type AnimeItemPropsType = {
+  anime: AnimeItem;
+}
+
+function AnimeItem({anime} : AnimeItemPropsType) {
+  // const [animeItem, setAnimeItem] = useState<AnimeItem | null>(null);
   const [animeCharacters, setAnimeCharacters] = useState<
     AnimeCharacterItem[] | null
   >(null);
@@ -57,27 +61,27 @@ function AnimeItem() {
   );
   const [isCharModalOpen, setIsCharModelOpen] = useState<boolean>(false);
 
-  const { id } = useParams();
+  // const { id } = useParams();
 
-  async function getData() {
-    try {
-      const res = await fetch(`https://api.jikan.moe/v4/anime/${id}`);
-      const data = await res.json();
-      console.log(data);
-      setAnimeItem(data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // async function getData() {
+  //   try {
+  //     const res = await fetch(`https://api.jikan.moe/v4/anime/${id}`);
+  //     const data = await res.json();
+  //     console.log(data);
+  //     setAnimeItem(data.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
-  useEffect(() => {
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   getData();
+  // }, []);
 
   async function getAnimeCharacters() {
     try {
       const res = await fetch(
-        `https://api.jikan.moe/v4/anime/${animeItem?.mal_id}/characters`,
+        `https://api.jikan.moe/v4/anime/${anime?.mal_id}/characters`,
       );
       const data = await res.json();
       console.log(data);
@@ -91,26 +95,26 @@ function AnimeItem() {
   }
 
   useEffect(() => {
-    if (animeItem) {
+    if (anime) {
       getAnimeCharacters();
     }
-  }, [animeItem]);
+  }, [anime]);
 
-  if (!animeItem) {
+  if (!anime) {
     return <p>Загрузка...</p>;
   }
 
   return (
     <div className="flex flex-col w-3/4 justify-center items-start">
-      <h2 className="font-bold text-3xl pb-5">
-        {animeItem.title_english} / {animeItem.title_japanese}
+      <h2 className="font-bold text-3xl py-3">
+        {anime.title_english} / {anime.title_japanese}
       </h2>
       <div className="flex w-full">
         <div>
           {/* <p>{animeItem?.url}</p> */}
           <div className="h-[389px] w-[261px] relative">
             <Image
-              src={animeItem?.images.jpg.large_image_url}
+              src={anime?.images.jpg.large_image_url}
               alt="anime_image"
               fill
               className="object-cover"
@@ -119,7 +123,7 @@ function AnimeItem() {
           <p className="text-center text-md text-gray-500 pt-2 self-center">
             Rating:{" "}
             <span className="bg-orange-500 text-white rounded-sm p-1">
-              {animeItem.rating.slice(0, 8)}
+              {anime.rating.slice(0, 8)}
             </span>
           </p>
         </div>
@@ -127,31 +131,31 @@ function AnimeItem() {
           <h2 className="text-2xl font-semibold text-blue-950 pb-3">
             Information
           </h2>
-          <p className="text-sm text-gray-500">Type: {animeItem.type}</p>
+          <p className="text-sm text-gray-500">Type: {anime.type}</p>
           <p className="text-sm text-gray-500">
             Status:{" "}
             <span className="bg-green-600 rounded-sm p-1 text-sm text-white">
-              {animeItem.status}
+              {anime.status}
             </span>
           </p>
           <p className="text-sm text-gray-500">
-            Episodes: {animeItem.episodes}
+            Episodes: {anime.episodes}
           </p>
 
           <p className="text-sm text-gray-500">
-            From {new Date(animeItem.aired.from).toLocaleDateString()} To{" "}
-            {new Date(animeItem.aired.to).toLocaleDateString()}
+            From {new Date(anime.aired.from).toLocaleDateString()} To{" "}
+            {new Date(anime.aired.to).toLocaleDateString()}
           </p>
-          <p className="text-sm text-gray-500">Source: {animeItem.source}</p>
+          <p className="text-sm text-gray-500">Source: {anime.source}</p>
 
           <div className="flex gap-2 text-sm text-gray-500">
             <p>Genres:</p>
             <div className="flex gap-2 items-center">
-              {animeItem.genres.map((item, i) => {
+              {anime.genres.map((item : GenreType, i: number) => {
                 return (
                   <p key={item.mal_id} className="text-sm">
                     {item.name}
-                    {i !== animeItem.genres.length - 1 ? "," : ""}
+                    {i !== anime.genres.length - 1 ? "," : ""}
                   </p>
                 );
               })}
@@ -160,7 +164,7 @@ function AnimeItem() {
           <div>
             <p>themes:</p>
             <ul>
-              {animeItem.themes.map((item) => {
+              {anime.themes.map((item: ThemeType) => {
                 return <li key={item.mal_id}>-{item.name}</li>;
               })}
             </ul>
@@ -170,19 +174,18 @@ function AnimeItem() {
           <div className="text-2xl font-semibold text-blue-950 pb-4">
             Score:{" "}
             <span className="border border-black py-1 px-2 rounded bg-green-600 text-white">
-              {animeItem.score}
+              {anime.score}
             </span>
           </div>
-          <Rating score={+animeItem.score} />
+          <Rating score={+anime.score} />
           <div className="flex gap-2 text-sm text-gray-500 justify-center items-center pt-5">
             <p>Studios:</p>
             <div className="flex items-center">
-              {animeItem.studios.map((item, i) => {
-                console.log(item.mal_id);
+              {anime.studios.map((item: StudiosType, i: number) => {
                 return (
                   <div key={item.mal_id} className="flex gap-2">
                     <p className="text-sm">
-                      {i !== animeItem.studios.length - 1 ? "," : ""}
+                      {i !== anime.studios.length - 1 ? "," : ""}
                     </p>
                     {studioLogos[item.mal_id] ? (
                       <a href={`${item.url}`} target="_blank">
@@ -204,7 +207,7 @@ function AnimeItem() {
         </div>
       </div>
       <div className="w-full pt-3">
-        <p>{animeItem.synopsis}</p>
+        <p>{anime.synopsis}</p>
       </div>
       <div className="flex flex-col gap-2">
         <h3 className="text-2xl font-semibold text-blue-950 pt-2">

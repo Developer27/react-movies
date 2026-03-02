@@ -205,3 +205,52 @@ body,
   transform: scale(0.95);
   opacity: 0;
 }
+
+
+
+.animated-pagination-btn {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.125rem;
+}
+
+.animated-pagination-btn::after {
+  content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    /* 4 стороны */
+    background:
+      /* bottom */
+      linear-gradient(currentColor, currentColor) bottom center / 0% 1px no-repeat,
+      /* left */
+      linear-gradient(currentColor, currentColor) bottom left / 1px 0% no-repeat,
+      /* top */
+      linear-gradient(currentColor, currentColor) top center / 0% 1px no-repeat,
+      /* right */
+      linear-gradient(currentColor, currentColor) bottom right / 1px 0% no-repeat;
+  
+    transition:
+      background-size 0.5s ease,
+      background-position 0s linear 0.5s;
+}
+
+.animated-pagination-btn:hover::after {
+  background-size:
+    /* bottom */
+    100% 2px,
+    /* left */
+    2px 100%,
+    /* top */
+    100% 2px,
+    /* right */
+    2px 100%;
+}
+
+.animated-pagination-btn.bg-black::after {
+  background-size:
+    100% 1px,
+    1px 100%,
+    100% 1px,
+    1px 100%;
+}

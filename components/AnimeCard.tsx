@@ -25,14 +25,18 @@ function AnimeCard({ data }: AnimeCardProps) {
         />
       </div>
 
-      <p className="text-sm truncate font-semibold text-blue-950 animated-underline relative">
+      <p className="text-sm truncate font-semibold  text-blue-950 animated-underline relative">
         {data.title}
       </p>
       <div className="flex items-center justify-between w-full ">
         <p className="text-sm">
           {data.type === "TV" ? data.type + " show" : data.type}
         </p>
-        <p className="text-sm">{data.year === null ? "N/A" : data.year}</p>
+        <p className="text-sm">
+          {data.year === null
+            ? new Date(data.aired.from).getFullYear()
+            : data.year}
+        </p>
       </div>
     </Link>
   );

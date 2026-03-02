@@ -13,7 +13,6 @@ import {
   ThemeType,
 } from "@/app/lib/types/types";
 import { studioLogos } from "@/app/lib/studio_logs";
-import { useParams } from "next/navigation";
 import Breadcrumbs from "./Breadcrumbs";
 
 type AnimeItem = {
@@ -53,7 +52,6 @@ type AnimeItemPropsType = {
 };
 
 function AnimeItem({ anime }: AnimeItemPropsType) {
-  // const [animeItem, setAnimeItem] = useState<AnimeItem | null>(null);
   const [animeCharacters, setAnimeCharacters] = useState<
     AnimeCharacterItem[] | null
   >(null);
@@ -61,23 +59,6 @@ function AnimeItem({ anime }: AnimeItemPropsType) {
     null,
   );
   const [isCharModalOpen, setIsCharModelOpen] = useState<boolean>(false);
-
-  // const { id } = useParams();
-
-  // async function getData() {
-  //   try {
-  //     const res = await fetch(`https://api.jikan.moe/v4/anime/${id}`);
-  //     const data = await res.json();
-  //     console.log(data);
-  //     setAnimeItem(data.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   getData();
-  // }, []);
 
   async function getAnimeCharacters() {
     try {
@@ -161,13 +142,11 @@ function AnimeItem({ anime }: AnimeItemPropsType) {
               })}
             </div>
           </div>
-          <div>
+          <div className="flex gap-2 text-sm text-gray-500">
             <p>themes:</p>
-            <ul>
-              {anime.themes.map((item: ThemeType) => {
-                return <li key={item.mal_id}>-{item.name}</li>;
-              })}
-            </ul>
+            {anime.themes.map((item: ThemeType) => {
+              return <p key={item.mal_id}>{item.name}</p>;
+            })}
           </div>
         </div>
         <div>
@@ -231,9 +210,7 @@ function AnimeItem({ anime }: AnimeItemPropsType) {
                   width={150}
                   height={150}
                 />
-                <p className="text-sm w-2/3 text-center">
-                  {item.character.name}
-                </p>
+                <p className="text-sm text-center">{item.character.name}</p>
               </div>
             );
           })}

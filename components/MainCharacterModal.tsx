@@ -8,6 +8,7 @@ import {
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import FeaturedInSlider from "./FeaturedInSlider";
+import VoiceActorsSlider from "./VoiceACtorsSlider";
 
 type MainCharacterModalType = {
   id: number;
@@ -17,25 +18,45 @@ type MainCharacterModalType = {
 type MainCharacterType = {
   mal_id: number;
   name: string;
+  name_kanji: string;
   about: string;
   images: ImagesType;
   anime: AnimeArrType[];
   manga: MangaArrType[];
   voices: VoiceType[];
+  nicknames: string[];
+};
+
+type CharacterPuctureType = {
+  jpg: { image_url: string };
 };
 
 function MainCharacterModal({ id, onClose }: MainCharacterModalType) {
   const [characterData, setCharacterData] = useState<MainCharacterType | null>(
     null,
   );
+  const [characterPictures, setCharacterPictures] = useState<
+    CharacterPuctureType[] | null
+  >(null);
   const [showFullBio, setShowFullBio] = useState(false);
 
+  async function getData() {
+    try {
+      const res = await fetch(
+        `https://api.jikan.moe/v4/characters/${id}/pictures`,
+      );
+      const data = await res.json();
+      setCharacterPictures(data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  console.log("testData", characterPictures);
   async function getCharData() {
     try {
       const res = await fetch(`https://api.jikan.moe/v4/characters/${id}/full`);
       const data = await res.json();
       setCharacterData(data.data);
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -43,6 +64,7 @@ function MainCharacterModal({ id, onClose }: MainCharacterModalType) {
 
   useEffect(() => {
     getCharData();
+    getData();
   }, []);
 
   if (!characterData) {
@@ -54,6 +76,9 @@ function MainCharacterModal({ id, onClose }: MainCharacterModalType) {
     //     </div>
     //   </div>
     // );
+  }
+  if (!characterPictures) {
+    return <p>loading</p>;
   }
 
   return (
@@ -82,7 +107,7 @@ function MainCharacterModal({ id, onClose }: MainCharacterModalType) {
           </svg>
         </div>
         <p className="text-2xl text-blue-950 font-semibold pb-2">
-          {characterData.name}
+          {characterData.name} / {characterData.name_kanji}
         </p>
         <div className="flex gap-2 w-full">
           <Image
@@ -91,40 +116,34 @@ function MainCharacterModal({ id, onClose }: MainCharacterModalType) {
             width={250}
             height={250}
           />
-          <div className="flex flex-col">
-            <h2 className="text-2xl text-blue-950 font-semibold">Voices:</h2>
-
-            <div
-              className={`flex flex-wrap gap-2 overflow-hidden transition-[max-height] duration-300 ease-in-out w-full `}
-            >
-              <div className="relative w-[220px]">
-                <div
-                  className={`grid grid-cols-2 pb-6 gap-2 overflow-y-auto overflow-x-hidden transition-[max-height] duration-300 ease-in-out max-h-[420px]`}
-                >
-                  {characterData.voices.map((item) => (
-                    <div
-                      key={item.person.mal_id}
-                      className="flex flex-col items-center gap-1 h-fit"
-                    >
-                      <Image
-                        src={item.person.images.jpg.image_url}
-                        alt={item.person.name}
-                        width={80}
-                        height={80}
-                        className="rounded-md"
-                      />
-                      <p className="text-sm text-center font-medium">
-                        {item.person.name}
-                      </p>
-                      <p className="text-xs text-gray-500 ">{item.language}</p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* {!showAll && (
-                  <div className="pointer-events-none absolute bottom-0 left-0 h-15 w-full bg-gradient-to-t from-white to-transparent" />
-                )} */}
+          <div>
+            <div className="text-sm flex flex-col gap-2 pb-2">
+              <div className="flex gap-2">
+                <p>Nicknames: </p>
+                {characterData.nicknames.map((nickname, index) => {
+                  return <p key={index}>{nickname}</p>;
+                })}
               </div>
+              <p>English name: {characterData.name}</p>
+              <p>Japanese name: {characterData.name_kanji}</p>
+            </div>
+            <div className="flex gap-2">
+              {characterPictures.map((item, index) => {
+                return (
+                  <div key={index} className="w-[150px] h-[200px] relative">
+                    <Image
+                      src={item.jpg.image_url}
+                      alt="character_img"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                );
+              })}
+            </div>
+            <h2 className="text-2xl text-blue-950 font-semibold">Voices:</h2>
+            <div className="flex flex-col h-fit pt-3 pl-2">
+              <VoiceActorsSlider data={characterData.voices} />
             </div>
           </div>
         </div>

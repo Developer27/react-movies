@@ -1,5 +1,5 @@
 "use client";
-import { AnimeArrType, MangaArrType } from "@/app/lib/types/types";
+import { VoiceType } from "@/app/lib/types/types";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 import { ArrowRight } from "lucide-react";
@@ -10,13 +10,12 @@ import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { useRef, useState } from "react";
-import Link from "next/link";
 
 type FeaturedInSliderPropsType = {
-  data: AnimeArrType[] | MangaArrType[];
+  data: VoiceType[];
 };
 
-function FeaturedInSlider({ data }: FeaturedInSliderPropsType) {
+function VoiceActorsSlider({ data }: FeaturedInSliderPropsType) {
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
   const [isBeginning, setIsBeginning] = useState(true);
@@ -24,7 +23,7 @@ function FeaturedInSlider({ data }: FeaturedInSliderPropsType) {
   const hideNavigation = data.length <= 5;
 
   return (
-    <div className="relative w-[600px] max-w-[600px] pb-3">
+    <div className="relative w-[600px] max-w-[600px]">
       <button
         disabled={isBeginning}
         ref={prevRef}
@@ -45,7 +44,7 @@ function FeaturedInSlider({ data }: FeaturedInSliderPropsType) {
 
       <Swiper
         modules={[Navigation, Autoplay]}
-        slidesPerView={5}
+        slidesPerView={4}
         spaceBetween={8}
         loop
         autoplay={{
@@ -74,35 +73,20 @@ function FeaturedInSlider({ data }: FeaturedInSliderPropsType) {
         className="overflow-hidden"
       >
         {data.map((item) => {
-          const isAnime = "anime" in item;
-
-          const title = isAnime ? item.anime.title : item.manga.title;
-          const imageUrl = isAnime
-            ? item.anime.images.jpg.image_url
-            : item.manga.images.jpg.image_url;
-          const id = isAnime
-            ? `/animes/${item.anime.mal_id}`
-            : `/manga/${item.manga.mal_id}`;
-
           return (
-            <SwiperSlide
-              key={isAnime ? item.anime.mal_id : item.manga.mal_id}
-              className="!h-[200px] hover:cursor-pointer"
-            >
-              <Link href={id} className="flex justify-center">
+            <SwiperSlide key={item.person.mal_id} className="!h-fit">
+              <div className="flex justify-center items-center">
                 <div className="w-[100px] h-[150px] relative">
                   <Image
-                    src={imageUrl}
-                    alt={title}
+                    src={item.person.images.jpg.image_url}
+                    alt={`${item.person.name}_picture`}
                     fill
                     className="rounded-md object-cover"
                   />
                 </div>
-              </Link>
-              <p className="text-sm truncate" title={title}>
-                {title}
-              </p>
-              <p className="text-sm">Role: {item.role}</p>
+              </div>
+              <p className="text-sm truncate text-center">{item.person.name}</p>
+              <p className="text-sm text-center">Language: {item.language}</p>
             </SwiperSlide>
           );
         })}
@@ -111,4 +95,4 @@ function FeaturedInSlider({ data }: FeaturedInSliderPropsType) {
   );
 }
 
-export default FeaturedInSlider;
+export default VoiceActorsSlider;

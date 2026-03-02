@@ -3,7 +3,7 @@ import { PaginationDataType } from "@/app/lib/types/types";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 type PaginationPropsType = {
   paginationData: PaginationDataType;
@@ -15,7 +15,8 @@ function Pagination({ paginationData, styles }: PaginationPropsType) {
   let half = Math.floor(VISIBLE_PAGES / 2);
   const [pageToGo, setPageToGo] = useState("");
   const [showInput, setShowInput] = useState(false);
-  const inputRef = useRef<HTMLDivElement>(null);
+  const inpuWrappertRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   let startPage = Math.max(1, paginationData.current_page - half);
@@ -54,8 +55,8 @@ function Pagination({ paginationData, styles }: PaginationPropsType) {
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
-        inputRef.current &&
-        !inputRef.current.contains(event.target as Node)
+        inpuWrappertRef.current &&
+        !inpuWrappertRef.current.contains(event.target as Node)
       ) {
         setShowInput(false);
         goToPage();
@@ -70,6 +71,14 @@ function Pagination({ paginationData, styles }: PaginationPropsType) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showInput, pageToGo]);
+
+  useLayoutEffect(() => {
+    if (showInput) {
+      requestAnimationFrame(() => {
+        inputRef.current?.focus();
+      });
+    }
+  }, [showInput]); /////useLayoutEffect - вызывается до отрисовки элемента.
 
   return (
     <div
@@ -96,7 +105,7 @@ function Pagination({ paginationData, styles }: PaginationPropsType) {
       {pages.map((page) => (
         <Link
           key={page}
-          className={`h-[30px] min-w-[35px] w-fit px-1 flex items-center justify-center text-sm border rounded-sm ${
+          className={`h-[30px] min-w-[35px] w-fit px-1 flex items-center justify-center text-sm border rounded-sm animated-pagination-btn ${
             page === paginationData.current_page ? "bg-black text-white" : ""
           }`}
           href={`?page=${page}`}
@@ -117,13 +126,14 @@ function Pagination({ paginationData, styles }: PaginationPropsType) {
 
         <div
           className={`absolute bottom-full flex gap-2 items-center justify-center -left-13 -top-15 h-fit fade-input ${showInput ? "show" : ""} p-3 rounded-md`}
-          ref={inputRef}
+          ref={inpuWrappertRef}
         >
           <input
-            type="text"
+            type="number"
             className="h-[30px] w-20 border text-sm outline-0 box-border border-black px-2 rounded-sm"
             placeholder={`${pageToGo || paginationData.current_page}`}
             value={pageToGo}
+            ref={inputRef}
             onChange={(e) => setPageToGo(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -132,6 +142,7 @@ function Pagination({ paginationData, styles }: PaginationPropsType) {
               }
             }}
             onBlur={goToPage}
+            autoFocus
           />
           <ArrowRight
             size={15}

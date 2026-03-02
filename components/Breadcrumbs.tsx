@@ -5,17 +5,15 @@ import { usePathname } from "next/navigation";
 
 type BreadcrumbsPropsType = {
   currentLabel?: string;
-}
+};
 
-export default function Breadcrumbs({currentLabel} : BreadcrumbsPropsType) {
+export default function Breadcrumbs({ currentLabel }: BreadcrumbsPropsType) {
   const pathname = usePathname();
 
-  const segments = pathname
-    .split("/")
-    .filter(Boolean);
+  const segments = pathname.split("/").filter(Boolean);
 
   return (
-    <nav aria-label="Breadcrumb">
+    <nav aria-label="Breadcrumb" className="flex self-start">
       <ol className="flex items-center gap-2 text-sm text-gray-500">
         <li>
           <Link href="/" className="hover:underline text-gray-700">
@@ -29,10 +27,9 @@ export default function Breadcrumbs({currentLabel} : BreadcrumbsPropsType) {
 
           let label = decodeURIComponent(segment);
 
-          if(isLast && currentLabel) {
+          if (isLast && currentLabel) {
             label = currentLabel;
           }
-          
 
           return (
             <li key={href} className="flex items-center gap-2">
@@ -43,10 +40,7 @@ export default function Breadcrumbs({currentLabel} : BreadcrumbsPropsType) {
                   {label}
                 </span>
               ) : (
-                <Link
-                  href={href}
-                  className="hover:underline capitalize"
-                >
+                <Link href={href} className="hover:underline capitalize">
                   {label}
                 </Link>
               )}

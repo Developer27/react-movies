@@ -1,5 +1,10 @@
 "use client";
-import { AnimeArrType, ImagesType } from "@/app/lib/types/types";
+import {
+  AnimeArrType,
+  ImagesType,
+  MangaArrType,
+  VoiceType,
+} from "@/app/lib/types/types";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import FeaturedInSlider from "./FeaturedInSlider";
@@ -7,29 +12,6 @@ import FeaturedInSlider from "./FeaturedInSlider";
 type MainCharacterModalType = {
   id: number;
   onClose: () => void;
-};
-
-type MangaType = {
-  mal_id: number;
-  title: string;
-  images: ImagesType;
-};
-
-type MangaArrType = {
-  role: string;
-  manga: MangaType;
-};
-
-type VoiceType = {
-  language: string;
-  person: VoicePersonType;
-};
-
-type VoicePersonType = {
-  mal_id: number;
-  name: string;
-  url: string;
-  images: { jpg: { image_url: string } };
 };
 
 type MainCharacterType = {
@@ -174,33 +156,16 @@ function MainCharacterModal({ id, onClose }: MainCharacterModalType) {
         <div className="pt-3">
           <p className="pb-2 text-blue-950 font-semibold">Featured in Anime:</p>
           <FeaturedInSlider data={characterData.anime} />
-          {/* <div className="flex gap-2">
-            {characterData.anime.map((item) => {
-              return (
-                <div
-                  key={item.anime.mal_id}
-                  className="flex flex-col items-center w-[150px]"
-                >
-                  <Image
-                    src={item.anime.images.jpg.image_url}
-                    alt="anime_image"
-                    width={100}
-                    height={100}
-                  />
-                  <p className="text-sm text-center pt-1">{item.anime.title}</p>
-                </div>
-              );
-            })}
-          </div> */}
           <p className="pb-2 text-blue-950 font-semibold">
             Featured it Manga:{" "}
           </p>
           <div className="flex gap-2">
-            {characterData.manga.map((item) => {
+            <FeaturedInSlider data={characterData.manga} />
+            {/* {characterData.manga.map((item) => {
               return (
                 <div
                   key={item.manga.mal_id}
-                  className="flex flex-col items-center w-[150px]"
+                  className="flex flex-col w-[150px]"
                 >
                   <Image
                     src={item.manga.images.jpg.image_url}
@@ -208,10 +173,10 @@ function MainCharacterModal({ id, onClose }: MainCharacterModalType) {
                     width={100}
                     height={100}
                   />
-                  <p className="text-sm text-center">{item.manga.title}</p>
+                  <p className="text-sm">{item.manga.title}</p>
                 </div>
               );
-            })}
+            })} */}
           </div>
         </div>
       </div>

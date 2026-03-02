@@ -14,6 +14,7 @@ import {
 } from "@/app/lib/types/types";
 import { studioLogos } from "@/app/lib/studio_logs";
 import { useParams } from "next/navigation";
+import Breadcrumbs from "./Breadcrumbs";
 
 type AnimeItem = {
   mal_id: number;
@@ -49,9 +50,9 @@ type AnimeCharacterItem = {
 
 type AnimeItemPropsType = {
   anime: AnimeItem;
-}
+};
 
-function AnimeItem({anime} : AnimeItemPropsType) {
+function AnimeItem({ anime }: AnimeItemPropsType) {
   // const [animeItem, setAnimeItem] = useState<AnimeItem | null>(null);
   const [animeCharacters, setAnimeCharacters] = useState<
     AnimeCharacterItem[] | null
@@ -106,6 +107,7 @@ function AnimeItem({anime} : AnimeItemPropsType) {
 
   return (
     <div className="flex flex-col w-3/4 justify-center items-start">
+      <Breadcrumbs currentLabel={anime.title_english} />
       <h2 className="font-bold text-3xl py-3">
         {anime.title_english} / {anime.title_japanese}
       </h2>
@@ -138,9 +140,7 @@ function AnimeItem({anime} : AnimeItemPropsType) {
               {anime.status}
             </span>
           </p>
-          <p className="text-sm text-gray-500">
-            Episodes: {anime.episodes}
-          </p>
+          <p className="text-sm text-gray-500">Episodes: {anime.episodes}</p>
 
           <p className="text-sm text-gray-500">
             From {new Date(anime.aired.from).toLocaleDateString()} To{" "}
@@ -151,7 +151,7 @@ function AnimeItem({anime} : AnimeItemPropsType) {
           <div className="flex gap-2 text-sm text-gray-500">
             <p>Genres:</p>
             <div className="flex gap-2 items-center">
-              {anime.genres.map((item : GenreType, i: number) => {
+              {anime.genres.map((item: GenreType, i: number) => {
                 return (
                   <p key={item.mal_id} className="text-sm">
                     {item.name}

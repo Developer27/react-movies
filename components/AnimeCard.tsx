@@ -1,6 +1,7 @@
 "use client";
 import { AnimeItemType } from "@/app/lib/types/types";
 import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 type AnimeCardProps = {
@@ -10,14 +11,10 @@ type AnimeCardProps = {
 function AnimeCard({ data }: AnimeCardProps) {
   console.log("data", data);
 
-  function goToAnimeitem() {
-    redirect(`/animes/${data.mal_id}`);
-  }
-
   return (
-    <div
+    <Link
       className="group-hover border flex flex-col gap-1 justify-center hover:cursor-pointer w-[150px] max-w-[150px] "
-      onClick={goToAnimeitem}
+      href={`/animes/${data.mal_id}`}
     >
       <div className="relative w-[150px] h-[212px]">
         <Image
@@ -37,7 +34,7 @@ function AnimeCard({ data }: AnimeCardProps) {
         </p>
         <p className="text-sm">{data.year === null ? "N/A" : data.year}</p>
       </div>
-    </div>
+    </Link>
   );
 }
 

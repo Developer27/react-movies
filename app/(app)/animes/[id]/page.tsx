@@ -16,9 +16,8 @@ export default async function Page({ params }: PageProps) {
   const anime = await getAnime(id);
 
   return (
-    <>
-      <Breadcrumbs currentLabel={anime.title} />
+    <div className="flex flex-col gap-2 w-3/4 justify-center items-center">
       <AnimeItem anime={anime} />
-    </>
+    </div>
   );
 }

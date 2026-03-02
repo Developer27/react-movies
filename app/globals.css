@@ -180,3 +180,28 @@ body,
 .group-hover:hover {
   transform: translateY(-10px)
 }
+
+.fade-input {
+  transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      background-color 0.2s ease; 
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+  background-color: rgba(209, 213, 219, 0);
+}
+
+.fade-input.show {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+  background-color: rgba(209, 213, 219, 1);
+}
+
+.fade-input:not(.show) {
+  /* можно сделать фон прозрачным через rgba с alpha */
+  background-color: rgba(209, 213, 219, 0);
+  transform: scale(0.95);
+  opacity: 0;
+}

@@ -1,5 +1,5 @@
 "use client";
-import { AnimeArrType } from "@/app/lib/types/types";
+import { AnimeArrType, MangaArrType } from "@/app/lib/types/types";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 import { ArrowRight } from "lucide-react";
@@ -12,7 +12,7 @@ import "swiper/css/navigation";
 import { useRef, useState } from "react";
 
 type FeaturedInSliderPropsType = {
-  data: AnimeArrType[];
+  data: AnimeArrType[] | MangaArrType[];
 };
 
 function FeaturedInSlider({ data }: FeaturedInSliderPropsType) {
@@ -72,22 +72,34 @@ function FeaturedInSlider({ data }: FeaturedInSliderPropsType) {
         }}
         className="overflow-hidden"
       >
-        {data.map((item) => (
-          <SwiperSlide key={item.anime.mal_id} className="!h-[200px]">
-            <div className="flex justify-center">
-              <div className="w-[100px] h-[150px] relative">
-                <Image
-                  src={item.anime.images.jpg.image_url}
-                  alt={item.anime.title || "anime_poster"}
-                  fill
-                  className="rounded-md object-cover"
-                />
+        {data.map((item) => {
+          const isAnime = "anime" in item;
+
+          const title = isAnime ? item.anime.title : item.manga.title;
+          const imageUrl = isAnime
+            ? item.anime.images.jpg.image_url
+            : item.manga.images.jpg.image_url;
+
+          return (
+            <SwiperSlide
+              key={isAnime ? item.anime.mal_id : item.manga.mal_id}
+              className="!h-[200px]"
+            >
+              <div className="flex justify-center">
+                <div className="w-[100px] h-[150px] relative">
+                  <Image
+                    src={imageUrl}
+                    alt={title}
+                    fill
+                    className="rounded-md object-cover"
+                  />
+                </div>
               </div>
-            </div>
-            <p className="text-sm truncate">{item.anime.title}</p>
-            <p className="text-sm">Role: {item.role}</p>
-          </SwiperSlide>
-        ))}
+              <p className="text-sm truncate">{title}</p>
+              <p className="text-sm">Role: {item.role}</p>
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
     </div>
   );

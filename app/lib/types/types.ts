@@ -74,3 +74,42 @@ export type AnimeArrType = {
   role: string;
   anime: AnimeType;
 };
+
+type MangaType = {
+  mal_id: number;
+  title: string;
+  images: ImagesType;
+};
+
+export type MangaArrType = {
+  role: string;
+  manga: MangaType;
+};
+
+
+export type VoiceType = {
+  language: string;
+  person: VoicePersonType;
+};
+
+type VoicePersonType = {
+  mal_id: number;
+  name: string;
+  url: string;
+  images: { jpg: { image_url: string } };
+};
+
+
+
+type PaginationItemType = {
+  count: number;
+  total: number;
+  per_page: number;
+};
+
+export type PaginationDataType = {
+  current_page: number;
+  last_visible_page: number;
+  items: PaginationItemType;
+  has_next_page: boolean;
+};

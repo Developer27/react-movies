@@ -66,7 +66,6 @@ function AnimeItem({ anime }: AnimeItemPropsType) {
         `https://api.jikan.moe/v4/anime/${anime?.mal_id}/characters`,
       );
       const data = await res.json();
-      console.log(data);
       const filteredData = data.data.filter(
         (item: AnimeCharacterItem) => item.role === "Main",
       );

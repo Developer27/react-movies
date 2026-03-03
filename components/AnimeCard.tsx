@@ -2,15 +2,12 @@
 import { AnimeItemType } from "@/app/lib/types/types";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 type AnimeCardProps = {
   data: AnimeItemType;
 };
 
 function AnimeCard({ data }: AnimeCardProps) {
-  console.log("data", data);
-
   return (
     <Link
       className="group-hover border flex flex-col gap-1 justify-center hover:cursor-pointer w-[150px] max-w-[150px] "

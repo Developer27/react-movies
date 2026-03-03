@@ -51,7 +51,6 @@ function MainCharacterModal({ id, onClose }: MainCharacterModalType) {
       console.log(error);
     }
   }
-  console.log("testData", characterPictures);
   async function getCharData() {
     try {
       const res = await fetch(`https://api.jikan.moe/v4/characters/${id}/full`);

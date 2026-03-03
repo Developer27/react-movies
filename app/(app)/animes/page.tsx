@@ -1,16 +1,21 @@
 import AnimeContainer from "@/components/AnimeContainer";
-import Breadcrumbs from "@/components/Breadcrumbs";
 
 type PagePropsType = {
-  searchParams: { page?: string };
+  searchParams: {
+    q?: string;
+    page?: string;
+  };
 };
 
 async function Page({ searchParams }: PagePropsType) {
-  const params = await searchParams;
-  const page = Number(params.page) || 1;
-  const res = await fetch(`https://api.jikan.moe/v4/anime?page=${page}`, {
-    cache: "no-store",
-  });
+  const { q = "", page = "1" } = await searchParams;
+
+  const res = await fetch(
+    `https://api.jikan.moe/v4/anime?q=${q}&page=${page}`,
+    {
+      cache: "no-store",
+    },
+  );
   const data = await res.json();
   const fetchedData = data.data;
   const paginationData = data.pagination;

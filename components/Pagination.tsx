@@ -2,7 +2,7 @@
 import { PaginationDataType } from "@/app/lib/types/types";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 type PaginationPropsType = {
@@ -18,6 +18,8 @@ function Pagination({ paginationData, styles }: PaginationPropsType) {
   const inpuWrappertRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const q = searchParams.get("q");
 
   let startPage = Math.max(1, paginationData.current_page - half);
   let endPage = startPage + VISIBLE_PAGES - 1;
@@ -30,6 +32,13 @@ function Pagination({ paginationData, styles }: PaginationPropsType) {
     { length: endPage - startPage + 1 },
     (_, i) => startPage + i,
   );
+
+  function hrefBuilder(page: number) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", String(page));
+
+    return `?${params.toString()}`;
+  }
 
   function goToPage() {
     const page = Number(pageToGo);
@@ -85,7 +94,7 @@ function Pagination({ paginationData, styles }: PaginationPropsType) {
       className={`flex gap-2 w-full px-2 justify-center items-center ${styles}`}
     >
       <Link
-        href={`?page=${Math.max(1, paginationData.current_page - 1)}`}
+        href={hrefBuilder(Math.max(1, paginationData.current_page - 1))}
         className={`${paginationData.current_page === 1 ? "pointer-events-none opacity-50" : ""} border border-black rounded-full`}
       >
         <ArrowLeft size={18} />
@@ -108,7 +117,7 @@ function Pagination({ paginationData, styles }: PaginationPropsType) {
           className={`h-[30px] min-w-[35px] w-fit px-1 flex items-center justify-center text-sm border rounded-sm animated-pagination-btn ${
             page === paginationData.current_page ? "bg-black text-white" : ""
           }`}
-          href={`?page=${page}`}
+          href={hrefBuilder(page)}
         >
           {page}
         </Link>
@@ -160,7 +169,7 @@ function Pagination({ paginationData, styles }: PaginationPropsType) {
         </>
       )}
       <Link
-        href={`?page=${paginationData.current_page + 1}`}
+        href={hrefBuilder(paginationData.current_page + 1)}
         className={`${paginationData.current_page === paginationData.last_visible_page ? "pointer-events-none opacity-50" : ""} border border-black rounded-full`}
       >
         <ArrowRight size={18} />

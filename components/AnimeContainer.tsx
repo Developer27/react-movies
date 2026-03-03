@@ -3,20 +3,22 @@ import AnimeCard from "./AnimeCard";
 import Pagination from "./Pagination";
 import Breadcrumbs from "./Breadcrumbs";
 
+import SearchComponent from "./SearchComponent";
+
 type AnimeContainerType = {
   data: AnimeItemType[];
   paginationData: PaginationDataType;
 };
 
 function AnimeContainer({ data, paginationData }: AnimeContainerType) {
-  console.log("dataaaaa", paginationData);
-
   if (!data) {
     return <p>Loading...</p>;
   }
   return (
     <div>
       <Breadcrumbs />
+      <SearchComponent />
+
       <Pagination paginationData={paginationData} />
       <div className="w-[850px] grid grid-cols-5 gap-y-5 border border-black place-items-center py-2 mt-2">
         {data.map((item) => {
